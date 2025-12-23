@@ -3,6 +3,8 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.5.10-SNAPSHOT"
 	id("io.spring.dependency-management") version "1.1.7"
+    // 最新版を使うとCOMPILE_INCREMENTAL_WITH_ARTIFACT_TRANSFORMでビルドが失敗するため、やむなくバージョンを下げている
+    id("com.netflix.dgs.codegen") version "7.0.3"
 }
 
 group = "com.udomomo"
