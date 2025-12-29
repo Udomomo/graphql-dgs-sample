@@ -6,8 +6,8 @@ import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "pullrequests")
-data class PullRequest(
+@Table(name = "pull_requests")
+data class PullRequestEntity(
     @Id
     val id: String,
     val baseRefName: String,
@@ -15,8 +15,8 @@ data class PullRequest(
     val headRefName: String,
     val url: String,
     val number: Int,
-    @OneToOne(Repository::class)
-    val repository: Repository,
+    @OneToOne(RepositoryEntity::class)
+    val repository: RepositoryEntity,
 ) {
     init {
         require(closed == 0 || closed == 1) { "closed must be 0 or 1" }

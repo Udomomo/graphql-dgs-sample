@@ -6,16 +6,16 @@ import jakarta.persistence.OneToOne
 import jakarta.persistence.Table
 
 @Entity
-@Table(name = "projectcards")
-data class ProjectCard(
+@Table(name = "project_cards")
+data class ProjectCardEntity(
     @Id
     val id: String,
-    @OneToOne(targetEntity = Project::class)
-    val project: Project,
-    @OneToOne(targetEntity = Issue::class)
-    val issue: Issue?,
-    @OneToOne(targetEntity = PullRequest::class)
-    val pullRequest: PullRequest?,
+    @OneToOne(targetEntity = ProjectEntity::class)
+    val project: ProjectEntity,
+    @OneToOne(targetEntity = IssueEntity::class)
+    val issue: IssueEntity?,
+    @OneToOne(targetEntity = PullRequestEntity::class)
+    val pullRequest: PullRequestEntity?,
 ) {
     init {
         require((issue != null) || (pullRequest != null)) {

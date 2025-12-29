@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS projects(
     FOREIGN KEY (owner) REFERENCES users(id)
 );
 
-CREATE TABLE IF NOT EXISTS pullrequests(
+CREATE TABLE IF NOT EXISTS pull_requests(
     id VARCHAR PRIMARY KEY NOT NULL,
     base_ref_name VARCHAR NOT NULL,
     closed INTEGER NOT NULL DEFAULT 0,
@@ -45,13 +45,13 @@ CREATE TABLE IF NOT EXISTS pullrequests(
     FOREIGN KEY (repository) REFERENCES repositories(id)
 );
 
-CREATE TABLE IF NOT EXISTS projectcards(
+CREATE TABLE IF NOT EXISTS project_cards(
     id VARCHAR PRIMARY KEY NOT NULL,
     project VARCHAR NOT NULL,
     issue VARCHAR,
-    pullrequest VARCHAR,
+    pull_request VARCHAR,
     FOREIGN KEY (project) REFERENCES projects(id),
     FOREIGN KEY (issue) REFERENCES issues(id),
-    FOREIGN KEY (pullrequest) REFERENCES pullrequests(id),
-    CHECK (issue IS NOT NULL OR pullrequest IS NOT NULL)
+    FOREIGN KEY (pull_request) REFERENCES pull_requests(id),
+    CHECK (issue IS NOT NULL OR pull_request IS NOT NULL)
 );

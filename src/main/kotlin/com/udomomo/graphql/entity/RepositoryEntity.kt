@@ -8,11 +8,11 @@ import java.time.LocalDateTime
 
 @Entity
 @Table(name = "repositories")
-data class Repository(
+data class RepositoryEntity(
     @Id
     val id: String,
-    @OneToOne(User::class)
-    val owner: User,
+    @OneToOne(UserEntity::class)
+    val owner: UserEntity,
     val name: String,
     val createdAt: LocalDateTime,
 )
