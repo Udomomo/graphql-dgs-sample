@@ -60,3 +60,13 @@ allOpen {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+// Kotlin向けのコード生成を行う実験的な機能。
+tasks.withType<com.netflix.graphql.dgs.codegen.gradle.GenerateJavaTask> {
+    language = "kotlin"
+    generateClient = true
+    // GraphQLのクエリリクエストでは、必要なプロパティしか指定されないため、本来はクエリのレスポンスのプロパティは全てnullableであるべき。
+    // しかし型レベルでnullableを区別するKotlinではそれだと不便なので、レスポンスのプロパティがnon-nullableであるかのごとく扱えるようなコード生成をする。
+    generateKotlinNullableClasses = true
+    generateKotlinClosureProjections = true
+}
