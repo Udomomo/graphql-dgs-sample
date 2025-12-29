@@ -29,6 +29,7 @@ val exposedVersion = "1.0.0-rc-4"
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-java-time:${exposedVersion}")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
