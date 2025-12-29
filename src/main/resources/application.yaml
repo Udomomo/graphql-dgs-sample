@@ -12,3 +12,6 @@ spring:
   sql:
     init:
       mode: always
+  exposed:
+    show-sql: true
+

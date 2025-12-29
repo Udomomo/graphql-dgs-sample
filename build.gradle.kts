@@ -24,15 +24,15 @@ repositories {
 }
 
 extra["netflixDgsVersion"] = "10.4.0"
+val exposedVersion = "1.0.0-rc-4"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.jetbrains.exposed:exposed-spring-boot-starter:$exposedVersion")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
     runtimeOnly("com.h2database:h2")
-    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("com.netflix.graphql.dgs:graphql-dgs-spring-graphql-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
