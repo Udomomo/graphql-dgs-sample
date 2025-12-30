@@ -7,6 +7,7 @@ import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsData
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment
 import com.netflix.graphql.dgs.DgsQuery
+import com.netflix.graphql.dgs.InputArgument
 import com.udomomo.graphql.domain.IssueStatus
 import com.udomomo.graphql.query.IssueQuery
 import com.udomomo.graphql.query.RepositoryQuery
@@ -36,9 +37,8 @@ class RepositoryDataFetcher(
     // repositoryクエリでissueフィールドが指定されたときに実行される。
     // 指定がなければ実行されない。
     @DgsData(parentType = "Repository")
-    fun issue(dfe: DgsDataFetchingEnvironment): Issue? {
+    fun issue(@InputArgument(name = "number") issueNumber: Int, dfe: DgsDataFetchingEnvironment): Issue? {
         val repository = dfe.getSource<Repository>() ?: return null
-        val issueNumber = dfe.getArgument<Int>("number")
         return issueQuery.findBy(repository.id, issueNumber)?.let {
             Issue(
                 id = { it.id },
