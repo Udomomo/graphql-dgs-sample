@@ -1,5 +1,5 @@
 INSERT INTO users(id, name) VALUES
-    ('U_1', 'hsaki')
+    ('U_1', 'Udomomo')
 ;
 
 INSERT INTO repositories(id, owner, name) VALUES
