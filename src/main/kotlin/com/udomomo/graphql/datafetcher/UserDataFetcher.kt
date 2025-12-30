@@ -11,11 +11,12 @@ class UserDataFetcher(
 ) {
     @DgsQuery
     fun user(name: String): User? {
-        val user = userQuery.findUserByName(name)
+        val user = userQuery.findBy(name)
         return user?.let {
             User(
                 id = { it.id } ,
                 name = { it.name },
+                projectV2 = { null }
             )
         }
     }

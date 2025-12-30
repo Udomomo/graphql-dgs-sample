@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class UserQuery {
-    fun findUserByName(name: String): User? =
+    fun findBy(name: String): User? =
         UserTable.select(
             UserTable.id,
             UserTable.name,
