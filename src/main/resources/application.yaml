@@ -2,7 +2,8 @@ spring:
   application:
     name: graphql
   datasource:
-    url: jdbc:h2:mem:graphql;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    # h2はデフォルトでDB名やカラム名を大文字に変換してしまうので、小文字を保持する設定を追加
+    url: jdbc:h2:mem:graphql;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
     password:
