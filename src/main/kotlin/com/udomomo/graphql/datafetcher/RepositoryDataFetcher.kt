@@ -1,9 +1,14 @@
 package com.udomomo.graphql.datafetcher
 
+import com.netflix.dgs.codegen.generated.types.Issue
 import com.netflix.dgs.codegen.generated.types.Repository
 import com.netflix.dgs.codegen.generated.types.User
 import com.netflix.graphql.dgs.DgsComponent
+import com.netflix.graphql.dgs.DgsData
+import com.netflix.graphql.dgs.DgsDataFetchingEnvironment
 import com.netflix.graphql.dgs.DgsQuery
+import com.udomomo.graphql.domain.IssueStatus
+import com.udomomo.graphql.query.IssueQuery
 import com.udomomo.graphql.query.RepositoryQuery
 import com.udomomo.graphql.query.UserQuery
 
@@ -11,6 +16,7 @@ import com.udomomo.graphql.query.UserQuery
 class RepositoryDataFetcher(
     private val userQuery: UserQuery,
     private val repositoryQuery: RepositoryQuery,
+    private val issueQuery: IssueQuery,
 ) {
     @DgsQuery
     fun repository(owner: String, name: String): Repository? {
@@ -23,6 +29,25 @@ class RepositoryDataFetcher(
                     id = { userId },
                     name = { owner },
                 ) },
+            )
+        }
+    }
+
+    // repositoryクエリでissueフィールドが指定されたときに実行される。
+    // 指定がなければ実行されない。
+    @DgsData(parentType = "Repository")
+    fun issue(dfe: DgsDataFetchingEnvironment): Issue? {
+        val repository = dfe.getSource<Repository>() ?: return null
+        val issueNumber = dfe.getArgument<Int>("number")
+        return issueQuery.findBy(repository.id, issueNumber)?.let {
+            Issue(
+                id = { it.id },
+                title = { it.title },
+                number = { it.number },
+                closed = { when (it.status) {
+                    IssueStatus.OPEN -> false
+                    IssueStatus.CLOSED -> true
+                } },
             )
         }
     }

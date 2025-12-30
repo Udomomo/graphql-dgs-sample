@@ -8,5 +8,5 @@ object IssueTable: IdTable<String>("issues") {
     val title = varchar("title", 64)
     val closed = integer("closed")
     val number = integer("number")
-    val repositoryId = varchar("repository_id", 16).references(RepositoryTable.id)
+    val repositoryId = varchar("repository", 16).references(RepositoryTable.id)
 }
