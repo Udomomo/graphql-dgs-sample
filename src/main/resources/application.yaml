@@ -14,4 +14,8 @@ spring:
       mode: always
   exposed:
     show-sql: true
-
+dgs:
+  graphql:
+    graphiql:
+      enabled: true
+      path: /graphiql
