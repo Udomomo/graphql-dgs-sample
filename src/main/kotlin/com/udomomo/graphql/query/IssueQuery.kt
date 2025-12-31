@@ -52,6 +52,8 @@ class IssueQuery {
             IssueTable.url,
             IssueTable.closed,
             IssueTable.number,
+            IssueTable.authorId,
+            IssueTable.repositoryId,
         ).where {
             IssueTable.repositoryId.eq(repositoryId)
         }.also {

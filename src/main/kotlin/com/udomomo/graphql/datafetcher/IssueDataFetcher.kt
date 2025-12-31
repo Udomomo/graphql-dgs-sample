@@ -2,6 +2,7 @@ package com.udomomo.graphql.datafetcher
 
 import com.netflix.dgs.codegen.generated.types.Issue
 import com.netflix.dgs.codegen.generated.types.IssueConnection
+import com.netflix.dgs.codegen.generated.types.IssueEdge
 import com.netflix.dgs.codegen.generated.types.PageInfo
 import com.netflix.dgs.codegen.generated.types.Repository
 import com.netflix.dgs.codegen.generated.types.User
@@ -53,30 +54,39 @@ class IssueDataFetcher(
     fun issues(
         @InputArgument first: Int?,
         dfe: DgsDataFetchingEnvironment,
-    ): IssueConnection? {
+    ): IssueConnectionDTO? {
         val repository = dfe.getSource<RepositoryDataFetcher.RepositoryDTO>() ?: return null
         val issues = issueQuery.listBy(repository.id, first).map {
-            Issue(
-                id = { it.id },
-                title = { it.title },
-                number = { it.number },
-                closed = { when (it.status) {
+            IssueDTO(
+                id = it.id,
+                title = it.title,
+                number = it.number,
+                closed = when (it.status) {
                     IssueStatus.OPEN -> false
                     IssueStatus.CLOSED -> true
-                } },
+                },
+                repositoryId = repository.id,
+                authorId = it.authorId,
             )
         }
 
-        return IssueConnection(
-            edges = { emptyList() },
-            nodes = { issues },
-            pageInfo = { PageInfo(
+        return IssueConnectionDTO(
+            edges = emptyList(),
+            nodes = issues,
+            pageInfo = PageInfo(
                 hasNextPage = { false },
-                hasPreviousPage = { false} ,
-            ) },
-            totalCount = { issues.size },
+                hasPreviousPage = { false } ,
+            ),
+            totalCount = issues.size,
         )
     }
+
+    data class IssueConnectionDTO(
+        val edges: List<IssueEdge>,
+        val nodes: List<IssueDTO>,
+        val pageInfo: PageInfo,
+        val totalCount: Int,
+    )
 
     @DgsData(parentType = "Issue")
     fun author(dfe: DgsDataFetchingEnvironment): User? {
