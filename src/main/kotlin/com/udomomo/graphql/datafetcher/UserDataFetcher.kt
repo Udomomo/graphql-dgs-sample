@@ -2,6 +2,8 @@ package com.udomomo.graphql.datafetcher
 
 import com.netflix.dgs.codegen.generated.types.User
 import com.netflix.graphql.dgs.DgsComponent
+import com.netflix.graphql.dgs.DgsData
+import com.netflix.graphql.dgs.DgsDataFetchingEnvironment
 import com.netflix.graphql.dgs.DgsQuery
 import com.udomomo.graphql.query.UserQuery
 
@@ -11,7 +13,7 @@ class UserDataFetcher(
 ) {
     @DgsQuery
     fun user(name: String): User? {
-        val user = userQuery.findBy(name)
+        val user = userQuery.findByName(name)
         return user?.let {
             User(
                 id = { it.id } ,
