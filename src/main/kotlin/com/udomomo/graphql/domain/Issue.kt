@@ -5,5 +5,7 @@ data class Issue(
     val url: String,
     val title: String,
     val number: Int,
+    val authorId: String,
+    val repositoryId: String,
     val status: IssueStatus,
 )
