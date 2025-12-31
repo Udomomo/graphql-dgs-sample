@@ -1,12 +1,10 @@
 package com.udomomo.graphql.datafetcher
 
-import com.netflix.dgs.codegen.generated.types.Repository
 import com.netflix.dgs.codegen.generated.types.User
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsData
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment
 import com.netflix.graphql.dgs.DgsQuery
-import com.udomomo.graphql.query.IssueQuery
 import com.udomomo.graphql.query.RepositoryQuery
 import com.udomomo.graphql.query.UserQuery
 
@@ -22,28 +20,23 @@ class RepositoryDataFetcher(
             RepositoryDTO(
                 id = it.id,
                 name = it.name ,
-                owner = RepositoryDTO.OwnerDTO(
-                    id = it.ownerId,
-                )
+                ownerId = it.ownerId,
             )
         }
     }
 
     // owner.nameの解決をchild datafetcherに任せているため、DGSが自動生成するRepository型とは別にDTOを定義して使う。
     // 自動生成されたRepository型を使わなくても、フィールド名が一致していればDGSによってマッピングされる。
+    // また、DTOに不要なフィールドがあっても問題ない。ownerIdはchild datafetcherで使うために用意している。
     data class RepositoryDTO(
         val id: String,
         val name: String,
-        val owner: OwnerDTO,
-    ) {
-        data class OwnerDTO(
-            val id: String,
-        )
-    }
+        val ownerId: String,
+    )
 
     @DgsData(parentType = "Repository")
     fun owner(dfe: DgsDataFetchingEnvironment): User? {
-        val userId = dfe.getSource<RepositoryDTO>().owner.id
+        val userId = dfe.getSource<RepositoryDTO>().ownerId
         val user = userQuery.findById(userId)
         return user?.let {
             User(
