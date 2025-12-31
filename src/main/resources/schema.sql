@@ -20,8 +20,10 @@ CREATE TABLE IF NOT EXISTS issues(
     title VARCHAR(64) NOT NULL,
     closed INTEGER NOT NULL DEFAULT 0,
     number INTEGER NOT NULL,
+    author VARCHAR(16) NOT NULL,
     repository VARCHAR(16) NOT NULL,
     CHECK (closed IN (0, 1)),
+    FOREIGN KEY (author) REFERENCES users(id),
     FOREIGN KEY (repository) REFERENCES repositories(id)
 );
 
