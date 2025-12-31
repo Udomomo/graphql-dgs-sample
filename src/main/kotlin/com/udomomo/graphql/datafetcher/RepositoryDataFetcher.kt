@@ -14,26 +14,36 @@ import com.udomomo.graphql.query.UserQuery
 class RepositoryDataFetcher(
     private val userQuery: UserQuery,
     private val repositoryQuery: RepositoryQuery,
-    private val issueQuery: IssueQuery,
 ) {
     @DgsQuery
-    fun repository(owner: String, name: String): Repository? {
+    fun repository(owner: String, name: String): RepositoryDTO? {
         val userId = userQuery.findByName(owner)?.id ?: return null
         return repositoryQuery.findBy(name, userId) ?.let {
-            Repository(
-                id = { it.id },
-                name = { it.name },
-                owner = { User(
-                    id = { userId },
-                    name = { owner },
-                ) },
+            RepositoryDTO(
+                id = it.id,
+                name = it.name ,
+                owner = RepositoryDTO.OwnerDTO(
+                    id = it.ownerId,
+                )
             )
         }
     }
 
+    // owner.nameの解決をchild datafetcherに任せているため、DGSが自動生成するRepository型とは別にDTOを定義して使う。
+    // 自動生成されたRepository型を使わなくても、フィールド名が一致していればDGSによってマッピングされる。
+    data class RepositoryDTO(
+        val id: String,
+        val name: String,
+        val owner: OwnerDTO,
+    ) {
+        data class OwnerDTO(
+            val id: String,
+        )
+    }
+
     @DgsData(parentType = "Repository")
     fun owner(dfe: DgsDataFetchingEnvironment): User? {
-        val userId = dfe.getSource<Repository>().owner.id
+        val userId = dfe.getSource<RepositoryDTO>().owner.id
         val user = userQuery.findById(userId)
         return user?.let {
             User(
