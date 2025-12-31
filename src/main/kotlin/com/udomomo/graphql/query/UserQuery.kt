@@ -11,12 +11,25 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class UserQuery {
-    fun findBy(name: String): User? =
+    fun findByName(name: String): User? =
         UserTable.select(
             UserTable.id,
             UserTable.name,
         ).where {
             UserTable.name.eq(name)
+        }.firstOrNull()?.let {
+            User(
+                id = it[UserTable.id].value,
+                name = it[UserTable.name],
+            )
+        }
+
+    fun findById(id: String): User? =
+        UserTable.select(
+            UserTable.id,
+            UserTable.name,
+        ).where {
+            UserTable.id.eq(id)
         }.firstOrNull()?.let {
             User(
                 id = it[UserTable.id].value,
