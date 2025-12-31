@@ -11,12 +11,14 @@ import com.netflix.graphql.dgs.DgsDataFetchingEnvironment
 import com.netflix.graphql.dgs.InputArgument
 import com.udomomo.graphql.domain.IssueStatus
 import com.udomomo.graphql.query.IssueQuery
+import com.udomomo.graphql.query.RepositoryQuery
 import com.udomomo.graphql.query.UserQuery
 
 @DgsComponent
 class IssueDataFetcher(
     private val issueQuery: IssueQuery,
     private val userQuery: UserQuery,
+    private val repositoryQuery: RepositoryQuery,
 ) {
     // repositoryクエリでissueフィールドが指定されたときに実行される。
     // 指定がなければ実行されない。
@@ -85,6 +87,19 @@ class IssueDataFetcher(
                 id = { it.id } ,
                 name = { it.name },
                 projectV2 = { null }
+            )
+        }
+    }
+
+    @DgsData(parentType = "Issue")
+    fun repository(dfe: DgsDataFetchingEnvironment): RepositoryDataFetcher.RepositoryDTO? {
+        val repositoryId = dfe.getSource<IssueDTO>().repositoryId
+        val repository = repositoryQuery.findById(repositoryId)
+        return repository?.let {
+            RepositoryDataFetcher.RepositoryDTO(
+                id = it.id,
+                name = it.name,
+                ownerId = it.ownerId,
             )
         }
     }

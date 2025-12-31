@@ -16,7 +16,7 @@ class RepositoryDataFetcher(
     @DgsQuery
     fun repository(owner: String, name: String): RepositoryDTO? {
         val userId = userQuery.findByName(owner)?.id ?: return null
-        return repositoryQuery.findBy(name, userId) ?.let {
+        return repositoryQuery.findByName(name, userId) ?.let {
             RepositoryDTO(
                 id = it.id,
                 name = it.name ,

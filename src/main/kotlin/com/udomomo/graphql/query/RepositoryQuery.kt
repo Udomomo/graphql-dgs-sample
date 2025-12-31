@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 class RepositoryQuery {
-    fun findBy(name: String, ownerId: String): Repository? =
+    fun findByName(name: String, ownerId: String): Repository? =
         RepositoryTable.select(
             RepositoryTable.id,
             RepositoryTable.name,
@@ -19,6 +19,21 @@ class RepositoryQuery {
         ).where {
             RepositoryTable.name.eq(name)
                 .and(RepositoryTable.ownerId.eq(ownerId))
+        }.firstOrNull()?.let {
+            return Repository(
+                id = it[RepositoryTable.id].value,
+                name = it[RepositoryTable.name],
+                ownerId = it[RepositoryTable.ownerId],
+            )
+        }
+
+    fun findById(id: String): Repository? =
+        RepositoryTable.select(
+            RepositoryTable.id,
+            RepositoryTable.name,
+            RepositoryTable.ownerId,
+        ).where {
+            RepositoryTable.id.eq(id)
         }.firstOrNull()?.let {
             return Repository(
                 id = it[RepositoryTable.id].value,
