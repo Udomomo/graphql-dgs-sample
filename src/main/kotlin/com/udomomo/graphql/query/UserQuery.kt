@@ -4,6 +4,7 @@ package com.udomomo.graphql.query
 import com.udomomo.graphql.domain.User
 import com.udomomo.graphql.table.UserTable
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.inList
 import org.jetbrains.exposed.v1.jdbc.select
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -31,6 +32,19 @@ class UserQuery {
         ).where {
             UserTable.id.eq(id)
         }.firstOrNull()?.let {
+            User(
+                id = it[UserTable.id].value,
+                name = it[UserTable.name],
+            )
+        }
+
+    fun listByIds(ids: List<String>): List<User> =
+        UserTable.select(
+            UserTable.id,
+            UserTable.name,
+        ).where {
+            UserTable.id.inList(ids)
+        }.map {
             User(
                 id = it[UserTable.id].value,
                 name = it[UserTable.name],

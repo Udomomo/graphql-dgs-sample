@@ -1,19 +1,18 @@
 package com.udomomo.graphql.datafetcher
 
-import com.netflix.dgs.codegen.generated.types.Issue
-import com.netflix.dgs.codegen.generated.types.IssueConnection
 import com.netflix.dgs.codegen.generated.types.IssueEdge
 import com.netflix.dgs.codegen.generated.types.PageInfo
-import com.netflix.dgs.codegen.generated.types.Repository
 import com.netflix.dgs.codegen.generated.types.User
 import com.netflix.graphql.dgs.DgsComponent
 import com.netflix.graphql.dgs.DgsData
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment
 import com.netflix.graphql.dgs.InputArgument
+import com.udomomo.graphql.dataloader.UserDataLoader
 import com.udomomo.graphql.domain.IssueStatus
 import com.udomomo.graphql.query.IssueQuery
 import com.udomomo.graphql.query.RepositoryQuery
 import com.udomomo.graphql.query.UserQuery
+import java.util.concurrent.CompletableFuture
 
 @DgsComponent
 class IssueDataFetcher(
@@ -89,16 +88,10 @@ class IssueDataFetcher(
     )
 
     @DgsData(parentType = "Issue")
-    fun author(dfe: DgsDataFetchingEnvironment): User? {
+    fun author(dfe: DgsDataFetchingEnvironment): CompletableFuture<User>? {
+        val dataLoader = dfe.getDataLoader<String, User>(UserDataLoader::class.java)
         val userId = dfe.getSource<IssueDTO>().authorId
-        val user = userQuery.findById(userId)
-        return user?.let {
-            User(
-                id = { it.id } ,
-                name = { it.name },
-                projectV2 = { null }
-            )
-        }
+        return dataLoader.load(userId)
     }
 
     @DgsData(parentType = "Issue")
